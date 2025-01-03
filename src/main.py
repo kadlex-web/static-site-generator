@@ -2,7 +2,16 @@ from textnode import *
 from htmlnode import *
 
 def main():
-    new_node = TextNode("this is a node", "bold", "www.google.com")
-    print(new_node)
+    parent_node = ParentNode(
+    "p",
+    [
+        LeafNode("b", "Bold text"),
+        LeafNode(None, "Normal text"),
+        LeafNode("i", "italic text"),
+        LeafNode(None, "Normal text"),
+    ],
+)
 
+    parent_html = parent_node.to_html()
+    print(parent_html)
 main()
