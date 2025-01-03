@@ -12,6 +12,7 @@ def main():
     ],
 )
 
-    parent_html = parent_node.to_html()
-    print(parent_html)
+    test_text_node = TextNode("howdy", TextType.NORMAL_TEXT, "www.google.com")
+    print(test_text_node.text_node_to_html_node())
+
 main()
