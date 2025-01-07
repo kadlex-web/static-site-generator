@@ -1,5 +1,5 @@
 from textnode import TextNode, TextType
-
+import re
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
@@ -20,3 +20,27 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
                 split_nodes.append(TextNode(sections[i], text_type))
         new_nodes.extend(split_nodes)
     return new_nodes
+
+
+def extract_markdown_images(image_text):
+    if image_text == None:
+        raise ValueError("Must pass some markdown text to be converted")
+    
+    if isinstance(image_text, str):
+        alt_text_pattern = r"(?<=!\[).*?(?=\])"
+        url_pattern = r"(?<=\().*?(?=\))"
+        alt_matches = re.findall(alt_text_pattern, image_text)
+        url_matches = re.findall(url_pattern, image_text)
+        markdown_tuples = list(zip(alt_matches, url_matches))
+        return markdown_tuples
+    raise TypeError("Markdown must be str type")
+
+def extract_markdown_links(link_text):
+    if link_text == None:
+        raise ValueError("Must pass some markdown text to be converted")
+    anchor_text_pattern = r"(?<=\[).*?(?=\])"
+    url_pattern = r"(?<=\().*?(?=\))"
+    anchor_matches = re.findall(anchor_text_pattern, link_text)
+    url_matches = re.findall(url_pattern, link_text)
+    markdown_tuples = list(zip(anchor_matches, url_matches))
+    return markdown_tuples
