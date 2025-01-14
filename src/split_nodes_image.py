@@ -26,11 +26,3 @@ def split_nodes_image(old_nodes):
         final_node = TextNode(node_text, TextType.NORMAL_TEXT)
         new_nodes.append(final_node)
     return new_nodes
-
-node = TextNode(
-    "This is text with two images. First ![to boot dev](https://www.boot.dev) Second ![to youtube](https://www.youtube.com/@bootdotdev)",
-    TextType.NORMAL_TEXT,
-)
-
-result = split_nodes_image([node])
-print(result)
