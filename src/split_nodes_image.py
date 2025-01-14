@@ -2,27 +2,30 @@ from split_delimiter import extract_markdown_images
 from textnode import TextNode, TextType
 
 def split_nodes_image(old_nodes):
-    if len(old_nodes) == 0:
-        raise ValueError("Node List must contain at least one element.")
-    
     new_nodes = []
-    for node in old_nodes:
-        node_text = node.text
-        link_tuples = extract_markdown_images(node.text)
-        if link_tuples == []:
-            return old_nodes
-        
-        for pair in link_tuples:
-            img_alt, img_url = pair
-            sections = node_text.split(f"![{img_alt}]({img_url})", 1)
-            if sections[0]:
-                new_node = TextNode(sections[0], TextType.NORMAL_TEXT)
-                new_nodes.append(new_node)
-            if img_alt:
-                link_node = TextNode(img_alt, TextType.IMAGE_TEXT, img_url)
-                new_nodes.append(link_node)
-            node_text = sections[1]
-    if node_text:
-        final_node = TextNode(node_text, TextType.NORMAL_TEXT)
-        new_nodes.append(final_node)
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.NORMAL_TEXT:
+            new_nodes.append(old_node)
+            continue
+        original_text = old_node.text
+        images = extract_markdown_images(original_text)
+        if len(images) == 0:
+            new_nodes.append(old_node)
+            continue
+        for image in images:
+            sections = original_text.split(f"![{image[0]}]({image[1]})", 1)
+            if len(sections) != 2:
+                raise ValueError("Invalid markdown, image section not closed")
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], TextType.NORMAL_TEXT))
+            new_nodes.append(
+                TextNode(
+                    image[0],
+                    TextType.IMAGE_TEXT,
+                    image[1],
+                )
+            )
+            original_text = sections[1]
+        if original_text != "":
+            new_nodes.append(TextNode(original_text, TextType.NORMAL_TEXT))
     return new_nodes

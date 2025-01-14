@@ -2,27 +2,24 @@ from split_delimiter import extract_markdown_links
 from textnode import TextNode, TextType
 
 def split_nodes_link(old_nodes):
-    if len(old_nodes) == 0:
-        raise ValueError("Node List must contain at least one element.")
-    
     new_nodes = []
-    for node in old_nodes:
-        node_text = node.text
-        link_tuples = extract_markdown_links(node.text)
-        if link_tuples == []:
-            return old_nodes
-        
-        for pair in link_tuples:
-            link_alt, link_url = pair
-            sections = node_text.split(f"[{link_alt}]({link_url})", 1)
-            if sections[0]:
-                new_node = TextNode(sections[0], TextType.NORMAL_TEXT)
-                new_nodes.append(new_node)
-            if link_alt:
-                link_node = TextNode(link_alt, TextType.LINK_TEXT, link_url)
-                new_nodes.append(link_node)
-            node_text = sections[1]
-    if node_text:
-        final_node = TextNode(node_text, TextType.NORMAL_TEXT)
-        new_nodes.append(final_node)
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.NORMAL_TEXT:
+            new_nodes.append(old_node)
+            continue
+        original_text = old_node.text
+        links = extract_markdown_links(original_text)
+        if len(links) == 0:
+            new_nodes.append(old_node)
+            continue
+        for link in links:
+            sections = original_text.split(f"[{link[0]}]({link[1]})", 1)
+            if len(sections) != 2:
+                raise ValueError("Invalid markdown, link section not closed")
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], TextType.NORMAL_TEXT))
+            new_nodes.append(TextNode(link[0], TextType.LINK_TEXT, link[1]))
+            original_text = sections[1]
+        if original_text != "":
+            new_nodes.append(TextNode(original_text, TextType.NORMAL_TEXT))
     return new_nodes
