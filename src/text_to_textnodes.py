@@ -21,8 +21,8 @@ Bold -> Italic -> Code -> Image -> Link
 '''
 from textnode import TextNode, TextType
 from split_delimiter import split_nodes_delimiter
-import split_nodes_image
-import split_nodes_link
+from split_nodes_image import split_nodes_image
+from split_nodes_link import split_nodes_link
 
 def text_to_textnodes(text):
     # Check to make sure the initial text passed to the function is string type, raise error if it isn't
