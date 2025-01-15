@@ -1,6 +1,7 @@
 import unittest
 
 from htmlnode import LeafNode
+
 @unittest.skip("skipping lead node tests")
 class TestLeafNode(unittest.TestCase):
 

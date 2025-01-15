@@ -4,7 +4,6 @@ from htmlnode import HTMLNode, ParentNode, LeafNode
 
 @unittest.skip("skip the original tests")
 class TestHTMLNode(unittest.TestCase):
-
     def test_repr(self):
         # tests functionality of the repr method
         node = HTMLNode("p", "This is a html node", "children", "props")
