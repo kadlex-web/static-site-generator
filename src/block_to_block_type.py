@@ -18,9 +18,9 @@ def block_to_block_type(markdown):
     re_heading = r"\A#{1,6} .*"
     if re.search(re_heading, markdown):
         return "heading"
-    re_code = r"\A`{3}.*?(?=```)"sg
+    re_code = r"\A`{3}.*?(?=```)"
     # Checks to see if the string (regardless of block length) begins with ``` and ends with ```
-    elif re.search(re_code, markdown):
+    if re.search(re_code, markdown):
         return "code"
     # Checks to see if the block begins with a > character and executes a helper function if it does
     elif markdown.startswith("> "):
@@ -44,21 +44,29 @@ def quote_block_type(markdown):
     
 def unordered_list_block_type(markdown):
     markdown_list = markdown.split("\n")
-    if markdown.startswith("* "):
+
+    if markdown_list[0].startswith("* "):
         for block_line in markdown_list:
             if block_line.startswith("* ") == False:
                 return "paragraph"
-    else:
+        return "unordered_list"
+    elif markdown_list[0].startswith("- "):
         for block_line in markdown_list:
             if block_line.startswith("- ") == False:
                 return "paragraph"
-    return "unordered_list"
+        return "unordered_list"
+    else:
+        return "paragraph"
 
 def ordered_list_block_type(markdown):
     markdown_list = markdown.split("\n")
     # use a range iterator to check the value of i against the value of the list number
     # if the values don't match terminate the loop and return "paragraph" because the block is actually a paragraph
     for i in range(1, len(markdown_list)):
-        if markdown_list[i].startswith(f"{i}. ") == False:
+        if markdown_list[i].startswith(f"{i+1}. ") == False:
             return "paragraph"
     return "ordered_list"
+
+markdown4 = '''1. but this list\n2. is really\n3. in order'''
+result = ordered_list_block_type(markdown4)
+print(result)
