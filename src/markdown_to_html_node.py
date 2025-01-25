@@ -8,24 +8,48 @@ def heading_tag(block):
     heading_value = block.count('#')
     return f'h{heading_value}'
 
-# Need to figure out what the tag is and if the node has any possible children
+def text_to_children(block):
+    list_of_text_nodes = text_to_textnodes(block)
+    list_of_html_nodes= []
+    for text_node in list_of_text_nodes:
+        list_of_html_nodes.append(text_node.text_node_to_html_node())
+    return list_of_html_nodes
+'''
+Heading -- DONE
+Code 
+Quote -- DONE
+Unordered List
+Ordered List
+Paragraph -- DONE
+
+After helper function figures out the tag -- we need to find all the children within the block
+
+function needs to end by returning a master HTML node with has all the other nodes in it.
+return HTMLNode(div,children_node_list) -- does not need any value assigned to it (it's a div) but needs to contain all child nodes
+building up the html_node_list is essentially creating the children structure
+'''
 def markdown_to_html_node(markdown):
     markdown_to_blocks_list = markdown_to_blocks(markdown)
     node_list = []
-    html_node_list = []
+    # Iterate through all of the blocks that were found in the markdown and construct a HTMLNode based on certain conditions
     for block in markdown_to_blocks_list:
+        # Computes the type of block we are dealing with
         block_type = block_to_block_type(block)
-        if block_type == "heading":
+        # If the block type is a heading - function determines what heading level it is (1-6)
+        if block_type == 'heading':
             tag = heading_tag(block)
             node = HTMLNode(tag, block)
-            html_node_list.append(node)
+            node_list.append(node)
+        elif block_type == 'quote':
+            tag = 'blockquote'
+            node = HTMLNode(tag, block)
+            node_list.append(node)
         else:
             tag = 'p'
-            node = HTMLNode(tag, block)
-            html_node_list.append(node)
-    for node in node_list:
-        print(f"{node}\n")
-    return html_node_list
+            l = text_to_children(block)
+            node = HTMLNode(tag=tag, children=l)
+            node_list.append(node)
+    return node_list
 
 markdown ='''# Esset artifices
 
@@ -40,7 +64,16 @@ nec, deae.
 
 1. Tum hanc lupus unum ut inter in
 2. Ternis in signis et piscem poteram
-3. Aut ad aevum Colophonius quae luridus gloria'''
+3. Aut ad aevum Colophonius quae luridus gloria
 
-b = markdown_to_html_node(markdown)
-print(b)
+> Tendere sine ut omnia iuvenes, sub aures pararet amplectitur **verba**.
+> Vigoris sint foret pignora moratur falsisque stetimus, in Iovem cerata lecto
+> altum. Meorum volat cognoscere Polypemonis omnes nemus autem. *Fata gratia*
+> hac cum exhalat colla. Est spoliare, Iovis, correptus et oris, has quid,
+> Telamone in.
+'''
+
+result = markdown_to_html_node(markdown)
+
+for node in result:
+    print(f'{node}\n')
