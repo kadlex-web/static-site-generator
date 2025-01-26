@@ -66,7 +66,3 @@ def ordered_list_block_type(markdown):
         if markdown_list[i].startswith(f"{i+1}. ") == False:
             return "paragraph"
     return "ordered_list"
-
-markdown4 = '''1. but this list\n2. is really\n3. in order'''
-result = ordered_list_block_type(markdown4)
-print(result)
