@@ -9,7 +9,7 @@ class TestMarkdownConversion(unittest.TestCase):
     text in a p
     tag here
 
-    This is another paragraph with _italic_ text and `code` here
+    This is another paragraph with *italic* text and `code` here
 
     """
 
@@ -23,7 +23,7 @@ class TestMarkdownConversion(unittest.TestCase):
     def test_codeblock(self):
         md = """
     ```
-    This is text that _should_ remain
+    This is text that *should* remain
     the **same** even with inline stuff
     ```
     """
