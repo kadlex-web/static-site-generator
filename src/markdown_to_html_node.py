@@ -8,6 +8,9 @@ def heading_tag(block):
     heading_value = block.count('#')
     return f'h{heading_value}'
 
+def code_tag(block):
+    pass
+
 def unordered_list_element(block):
     split_blocks = block.split("\n")
     node_list = []
@@ -74,7 +77,7 @@ def markdown_to_html_node(markdown):
             node_list.append(node)
 
         elif block_type == 'code':
-            pass
+            list_elements = code_tag(block)
 
         elif block_type == "unordered_list":
             list_elements = unordered_list_element(block)
