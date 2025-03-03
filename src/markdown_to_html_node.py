@@ -1,3 +1,18 @@
+'''
+TO-DO
+Heading -- Need to add in-line conversion
+Code -- DONE (no in-line trimming)
+Quote -- Need to add trimming of quote characters
+Unordered List - Need to add in-line conversion
+Ordered List - Need to add in-line conversion
+Paragraph -- DONE
+
+After helper function figures out the tag -- we need to find all the children within the block
+function needs to end by returning a master HTML node with has all the other nodes in it.
+return HTMLNode(div,children_node_list) -- does not need any value assigned to it (it's a div) but needs to contain all child nodes
+building up the html_node_list is essentially creating the children structure
+'''
+
 from block_to_block_type import *
 from markdown_to_blocks import *
 from htmlnode import *
@@ -8,8 +23,9 @@ def heading_tag(block):
     heading_value = block.count('#')
     return f'h{heading_value}'
 
-def code_tag(block):
-    pass
+def create_code_block(block):
+    code_node = HTMLNode(tag='code', block)
+    return code_node
 
 def unordered_list_element(block):
     split_blocks = block.split("\n")
@@ -29,33 +45,15 @@ def ordered_list_element(block):
         node_list.append(node)
     return node_list
 
-
-def text_to_children(block):
-    list_of_text_nodes = text_to_textnodes(block)
-    list_of_html_nodes= []
+'''Function which takes markdown text and returns a list of HTML Nodes representing the in-line contained within'''
+def text_to_children(text):
+    list_of_text_nodes = text_to_textnodes(text)
+    list_of_html_nodes = []
     for text_node in list_of_text_nodes:
         list_of_html_nodes.append(text_node.text_node_to_html_node())
     return list_of_html_nodes
-
-'''
-Heading -- DONE
-Code 
-Quote
-Unordered List - DONE
-Ordered List - DONE
-Paragraph -- DONE
-
-After helper function figures out the tag -- we need to find all the children within the block
-
-function needs to end by returning a master HTML node with has all the other nodes in it.
-return HTMLNode(div,children_node_list) -- does not need any value assigned to it (it's a div) but needs to contain all child nodes
-building up the html_node_list is essentially creating the children structure
-
-NEED TO DO:
-need to look at text and see if there's any in-line in it. in particular the block quote contains markdown
-need to fix blockquote to trim the blockquote characters
-need to write condition for code block
-'''
+    
+'''Main Function'''
 def markdown_to_html_node(markdown):
     markdown_to_blocks_list = markdown_to_blocks(markdown)
     node_list = []
@@ -69,30 +67,36 @@ def markdown_to_html_node(markdown):
             block_text = block.split(" ", 1)[1]
             node = HTMLNode(tag, block_text)
             node_list.append(node)
-
+        # If the block is a quote - split at the delimiter and create a blockquote HTMLNode
         elif block_type == 'quote':
             tag = 'blockquote'
-            block_text = block.split(" ", 1)[1]
-            node = HTMLNode(tag, block)
+            l = text_to_children(block)
+            # block_text = block.split(" ", 1)[1]
+            node = HTMLNode(tag, l)
             node_list.append(node)
 
         elif block_type == 'code':
-            list_elements = code_tag(block)
+            code_block = create_code_block(block)
+            #block_text = block.split(" ", 1)[1]
+            node = HTMLNode(tag='pre', code_block)
+            node_list.append(node)
 
         elif block_type == "unordered_list":
             list_elements = unordered_list_element(block)
-            node = ParentNode(tag='ul', children=list_elements)
+            node = HTMLNode(tag='ul', children=list_elements)
             node_list.append(node)
 
         elif block_type == "ordered_list":
             list_elements = ordered_list_element(block)
-            node = ParentNode(tag='ol', children=list_elements)
+            node = HTMLNode(tag='ol', children=list_elements)
             node_list.append(node)
+            
         else:
             tag = 'p'
             l = text_to_children(block)
-            node = ParentNode(tag=tag, children=l)
+            node = HTMLNode(tag=tag, children=l)
             node_list.append(node)
+            
     return node_list
     return HTMLNode('div',node_list)
 
