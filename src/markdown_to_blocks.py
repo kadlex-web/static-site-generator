@@ -1,5 +1,17 @@
 '''Takes raw markdown text as a string and converts it to a list of block strings
-A block is a piece of text between line breaks'''
+A block is a piece of text between line breaks
+Might be error in here where the ValueError is flagging
+This code works:
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
+    filtered_blocks = []
+    for block in blocks:
+        if block == "":
+            continue
+        block = block.strip()
+        filtered_blocks.append(block)
+    return filtered_blocks
+'''
 def markdown_to_blocks(markdown):
     if isinstance(markdown, str):
         if markdown != '':
