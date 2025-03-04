@@ -18,9 +18,9 @@ def block_to_block_type(markdown):
     re_heading = r"\A#{1,6} .*"
     if re.search(re_heading, markdown):
         return "heading"
-    re_code = r"\A`{3}.*?(?=```)"
+    # re_code = r"\A`{3}.*?(?=```)"
     # Checks to see if the string (regardless of block length) begins with ``` and ends with ```
-    if re.search(re_code, markdown):
+    if markdown.strip().startswith("```") and markdown.strip().endswith("```"):
         return "code"
     # Checks to see if the block begins with a > character and executes a helper function if it does
     elif markdown.startswith("> "):

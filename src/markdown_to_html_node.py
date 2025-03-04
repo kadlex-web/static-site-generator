@@ -1,48 +1,33 @@
-'''
-TO-DO
-Heading -- Need to add in-line conversion
-Code -- DONE (no in-line trimming)
-Quote -- Need to add trimming of quote characters
-Unordered List - Need to add in-line conversion
-Ordered List - Need to add in-line conversion
-Paragraph -- DONE
-
-After helper function figures out the tag -- we need to find all the children within the block
-function needs to end by returning a master HTML node with has all the other nodes in it.
-return HTMLNode(div,children_node_list) -- does not need any value assigned to it (it's a div) but needs to contain all child nodes
-building up the html_node_list is essentially creating the children structure
-'''
-
 from block_to_block_type import *
 from markdown_to_blocks import *
 from htmlnode import *
-from textnode import TextNode
+from textnode import *
 from text_to_textnodes import text_to_textnodes
 
 def heading_tag(block):
     heading_value = block.count('#')
     return f'h{heading_value}'
 
-def create_code_block(block):
-    code_node = HTMLNode(tag='code', block)
-    return code_node
-
 def unordered_list_element(block):
     split_blocks = block.split("\n")
     node_list = []
     for line in split_blocks:
-        trimmed_line = line.split(" ", 1)[1]
-        node = LeafNode(tag='li',value=trimmed_line)
-        node_list.append(node)
+        if line.strip():
+            trimmed_line = line.split(" ", 1)[1]
+            child_nodes = text_to_children(trimmed_line)
+            node = ParentNode(tag='li',children=child_nodes)
+            node_list.append(node)
     return node_list
 
 def ordered_list_element(block):
     split_blocks = block.split("\n")
     node_list = []
     for line in split_blocks:
-        trimmed_line = line.split(" ", 1)[1]
-        node = LeafNode(tag='li',value=trimmed_line)
-        node_list.append(node)
+        if line.strip():
+            trimmed_line = line.split(" ", 1)[1]
+            child_nodes = text_to_children(trimmed_line)
+            node = ParentNode(tag='li',children=child_nodes)
+            node_list.append(node)
     return node_list
 
 '''Function which takes markdown text and returns a list of HTML Nodes representing the in-line contained within'''
@@ -50,7 +35,7 @@ def text_to_children(text):
     list_of_text_nodes = text_to_textnodes(text)
     list_of_html_nodes = []
     for text_node in list_of_text_nodes:
-        list_of_html_nodes.append(text_node.text_node_to_html_node())
+        list_of_html_nodes.append(text_node_to_html_node(text_node))
     return list_of_html_nodes
     
 '''Main Function'''
@@ -59,46 +44,79 @@ def markdown_to_html_node(markdown):
     node_list = []
     # Iterate through all of the blocks that were found in the markdown and construct a HTMLNode based on certain conditions
     for block in markdown_to_blocks_list:
+        # Checks for empty blocks and does not iterate over them via continue. otherwise processing continues
+        if not block.strip():
+            continue
         # Computes the type of block we are dealing with
         block_type = block_to_block_type(block)
+
+        if block_type == "code":
+            lines = block.split("\n")
+            # Skip the first and last lines (they contain ```)
+            code_lines = lines[1:-1]
+            
+            # Remove leading whitespace from each line
+            code_lines = [line.lstrip() for line in code_lines]
+            
+            # Add a trailing newline to match the expected output
+            code_content = "\n".join(code_lines) + "\n"
+            
+            # Create a TextNode with the raw code content
+            text_node = TextNode(code_content, TextType.NORMAL_TEXT)
+            code_node = text_node_to_html_node(text_node)
+            pre_node = ParentNode("pre", [ParentNode("code", [code_node])])
+            node_list.append(pre_node)
+
         # If the block type is a heading - function determines what heading level it is (1-6)
-        if block_type == 'heading':
+        elif block_type == 'heading':
             tag = heading_tag(block)
             block_text = block.split(" ", 1)[1]
-            node = HTMLNode(tag, block_text)
-            node_list.append(node)
-        # If the block is a quote - split at the delimiter and create a blockquote HTMLNode
-        elif block_type == 'quote':
-            tag = 'blockquote'
-            l = text_to_children(block)
-            # block_text = block.split(" ", 1)[1]
-            node = HTMLNode(tag, l)
+            child_nodes = text_to_children(block_text)
+            node = ParentNode(tag, child_nodes)
             node_list.append(node)
 
-        elif block_type == 'code':
-            code_block = create_code_block(block)
-            #block_text = block.split(" ", 1)[1]
-            node = HTMLNode(tag='pre', code_block)
+        # If the block is a quote - split at the delimiter and create a blockquote HTMLNode
+        elif block_type == 'quote':
+            # Remove the '>' prefix from each line
+            lines = block.split("\n")
+            quote_content = []
+            for line in lines:
+                if line.startswith('>'):
+                    # Remove '>' and one space if present
+                    line = line[1:]
+                    if line.startswith(' '):
+                        line = line[1:]
+                    quote_content.append(line)
+    
+            # Join the lines back together and process for inline markdown
+            processed_content = ' '.join(quote_content)
+            child_nodes = text_to_children(processed_content)
+            node = ParentNode('blockquote', child_nodes)
             node_list.append(node)
 
         elif block_type == "unordered_list":
             list_elements = unordered_list_element(block)
-            node = HTMLNode(tag='ul', children=list_elements)
+            node = ParentNode(tag='ul', children=list_elements)
             node_list.append(node)
 
         elif block_type == "ordered_list":
             list_elements = ordered_list_element(block)
-            node = HTMLNode(tag='ol', children=list_elements)
+            node = ParentNode(tag='ol', children=list_elements)
             node_list.append(node)
             
-        else:
+        elif block_type == "paragraph":
             tag = 'p'
-            l = text_to_children(block)
-            node = HTMLNode(tag=tag, children=l)
-            node_list.append(node)
+            # Clean up the text: trim and normalize whitespace
+            clean_text = block.strip().replace("\n", " ")
+            # Normalize multiple spaces to single spaces (optional but good practice)
+            while "  " in clean_text:
+                clean_text = clean_text.replace("  ", " ")
             
-    return node_list
-    return HTMLNode('div',node_list)
+            l = text_to_children(clean_text)
+            node = ParentNode(tag=tag, children=l)
+            node_list.append(node)
+    
+    return ParentNode('div',node_list)
 
 markdown ='''# Esset artifices
 
@@ -126,7 +144,3 @@ nec, deae.
 * Neve depositum gerunt rura abest iunctarum Ampycides
 * Quadripedis divae pavonibus
 '''
-
-result = markdown_to_html_node(markdown)
-for node in result:
-    print(f'{node}\n')

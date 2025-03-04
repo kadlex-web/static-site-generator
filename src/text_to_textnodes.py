@@ -25,6 +25,16 @@ from split_nodes_image import split_nodes_image
 from split_nodes_link import split_nodes_link
 
 def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.NORMAL_TEXT)]
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD_TEXT)
+    nodes = split_nodes_delimiter(nodes, "*", TextType.ITALIC_TEXT)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE_TEXT)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    return nodes
+
+'''
+def text_to_textnodes(text):
     # Check to make sure the initial text passed to the function is string type, raise error if it isn't
     if isinstance(text, str):
         if len(text) > 0:
@@ -42,3 +52,4 @@ def text_to_textnodes(text):
             return final_split
         raise ValueError('Markdown text must contain some string data.')
     raise TypeError("Markdown text must be str type to begin conversion to text nodes")
+'''
