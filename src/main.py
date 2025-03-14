@@ -4,14 +4,14 @@ from copy_static import *
 from server_utility import *
 
 def main():
-    destination = "/Users/ak/workspace/github.com/kadlex-web/static-site-generator/public"
-    source = "/Users/ak/workspace/github.com/kadlex-web/static-site-generator/static"
-
+    destination = "./public"
+    source = "./static"
+    print("Moving static files...")
     copy_static(source, destination)
 
-    from_path = '/Users/ak/workspace/github.com/kadlex-web/static-site-generator/content/index.md'
-    template_path = '/Users/ak/workspace/github.com/kadlex-web/static-site-generator/template.html'
-    dest_path = '/Users/ak/workspace/github.com/kadlex-web/static-site-generator/public/index.html'
-
-    generate_page(from_path, template_path, dest_path)
+    dir_path_content = "./content"
+    template_path = './template.html'
+    print("Generating pages...")
+    generate_pages_recursive(dir_path_content, template_path, destination)
+    
 main()

@@ -1,14 +1,43 @@
-Generating page from /Users/ak/workspace/github.com/kadlex-web/static-site-generator/content/index.md to /Users/ak/workspace/github.com/kadlex-web/static-site-generator/public/index.html using /Users/ak/workspace/github.com/kadlex-web/static-site-generator/template.html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tolkien Fan Club</title>
-    <link href="/index.css" rel="stylesheet" />
-  </head>
+Moving static files...
+./public already exists. i need to delete it
+deleted!
+creating a fresh ./public
+['.DS_Store', 'images', 'index.css']
+./public/images
+images is a directory. we need to enter the directory to check for files
+moving to source:./static/images and destination: ./public/images
+['rivendell.png', 'tolkien.png', 'tom.png', 'glorfindel.png']
+./public/images/rivendell.png
+./static/images/rivendell.png is a file and I need to copy it
+copying ./static/images/rivendell.png to ./public/images/rivendell.png
+done!
+./public/images/tolkien.png
+./static/images/tolkien.png is a file and I need to copy it
+copying ./static/images/tolkien.png to ./public/images/tolkien.png
+done!
+./public/images/tom.png
+./static/images/tom.png is a file and I need to copy it
+copying ./static/images/tom.png to ./public/images/tom.png
+done!
+./public/images/glorfindel.png
+./static/images/glorfindel.png is a file and I need to copy it
+copying ./static/images/glorfindel.png to ./public/images/glorfindel.png
+done!
+./public/index.css
+./static/index.css is a file and I need to copy it
+copying ./static/index.css to ./public/index.css
+done!
+Generating pages...
+moving source to ./content/contact and dest to ./public/contact
+Generating page from ./content/contact/contact.md to ./public/contact using ./template.html
+moving source to ./content/blog and dest to ./public/blog
+moving source to ./content/blog/tom and dest to ./public/blog/tom
+Generating page from ./content/blog/tom/index.md to ./public/blog/tom using ./template.html
+moving source to ./content/blog/glorfindel and dest to ./public/blog/glorfindel
+Generating page from ./content/blog/glorfindel/index.md to ./public/blog/glorfindel using ./template.html
+moving source to ./content/blog/majesty and dest to ./public/blog/majesty
+Generating page from ./content/blog/majesty/index.md to ./public/blog/majesty using ./template.html
+Generating page from ./content/index.md to ./public using ./template.html
+Serving HTTP on :: port 8888 (http://[::]:8888/) ...
 
-  <body>
-    <article><div><h1>Tolkien Fan Club</h1><p><img src="/images/tolkien.png" alt="JRR Tolkien sitting"></img></p><p>Here's the deal, <b>I like Tolkien</b>.</p><p>> "I am in fact a Hobbit in all but size." > > -- J.R.R. Tolkien</p><h2>Blog posts</h2><ul><li><a href="/blog/glorfindel">Why Glorfindel is More Impressive than Legolas</a></li><li><a href="/blog/tom">Why Tom Bombadil Was a Mistake</a></li><li><a href="/blog/majesty">The Unparalleled Majesty of "The Lord of the Rings"</a></li></ul></div></article>
-  </body>
-</html>
+Keyboard interrupt received, exiting.

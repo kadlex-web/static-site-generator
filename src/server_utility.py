@@ -1,7 +1,7 @@
-
 import re
 import os
 from markdown_to_html_node import *
+from pathlib import Path
 
 # Pulls h1 element from a markdown file and returns it. Strips # and leading/trailing whitespace
 def extract_title(markdown):
@@ -31,8 +31,28 @@ def generate_page(from_path, template_path, dest_path):
     new_file = re.sub("{{ Content }}", html_string, template_file_contents)
     # Uses a regex pattern to replace the title field in the now modified template with the extracted title
     new_file = re.sub("{{ Title }}", title_text, new_file)
-    
-    # Creates and opens the new file, writes the HTML, and closes the file
-    dest_file = open(dest_path, "w")
+    # creates file
+    file_name = os.path.join(dest_path, "index.html")
+    # Opens the new file, writes the HTML, and closes the file
+    dest_file = open(file_name, "w")
     dest_file.write(new_file)
     dest_file.close()
+
+# Crawls a given directory, finds markdown files, converts to html and writes them to public
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    directories = os.listdir(dir_path_content)
+    for file in directories:
+        # Uses path to make it easier (and safer) to get the suffix
+        file_name = Path(file)
+        if file_name.suffix == '.md':
+            source_content = os.path.join(dir_path_content, file_name)
+            generate_page(source_content, template_path, dest_dir_path)
+        elif file_name.suffix == '':
+            new_dir_path_content = os.path.join(dir_path_content, file)
+            new_dest_dir_path = os.path.join(dest_dir_path, file)
+            if os.path.exists(new_dest_dir_path) != True:
+                os.mkdir(new_dest_dir_path)
+            print(f"moving source to {new_dir_path_content} and dest to {new_dest_dir_path}")
+            generate_pages_recursive(new_dir_path_content, template_path, new_dest_dir_path)
+        else:
+            pass

@@ -1,12 +1,6 @@
 import os
 import shutil
 
-# destination
-# /Users/ak/workspace/github.com/kadlex-web/static-site-generator/public
-# source
-# /Users/ak/workspace/github.com/kadlex-web/static-site-generator/static
-
-
 '''Function given a source directory(str) and a destination directory(str); 
 function checks to see if the destination and source exists. if source doesn't exist, function does not execute.
 if destination exists - delete old version to ensure clean copy. create new one
@@ -55,9 +49,3 @@ def copy_source_dir(source, destination):
                 new_source = os.path.join(source, file)
                 print(f"moving to source:{new_source} and destination: {new_file}")
                 copy_source_dir(new_source, new_file)
-
-
-destination = "/Users/ak/workspace/github.com/kadlex-web/static-site-generator/public"
-source = "/Users/ak/workspace/github.com/kadlex-web/static-site-generator/static"
-
-copy_static(source, destination)
