@@ -2,3 +2,4 @@ __pycache__/
 public/
 src/markdown_text.md
 new 2.txt
+.DS_Store
