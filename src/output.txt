@@ -1,0 +1,20 @@
+/Users/ak/workspace/github.com/kadlex-web/static-site-generator/public already exists. i need to delete it
+deleted!
+creating a fresh /Users/ak/workspace/github.com/kadlex-web/static-site-generator/public
+['.DS_Store', 'images', 'index.css']
+.DS_Store
+/Users/ak/workspace/github.com/kadlex-web/static-site-generator/static/.DS_Store is a file and I need to copy it
+copying /Users/ak/workspace/github.com/kadlex-web/static-site-generator/static/.DS_Store to /Users/ak/workspace/github.com/kadlex-web/static-site-generator/public/.DS_Store
+done!
+images
+images is a directory. we need to enter the directory to check for files
+moving to source:/Users/ak/workspace/github.com/kadlex-web/static-site-generator/static/images and destination: /Users/ak/workspace/github.com/kadlex-web/static-site-generator/public/images
+['tolkien.png']
+tolkien.png
+/Users/ak/workspace/github.com/kadlex-web/static-site-generator/static/images/tolkien.png is a file and I need to copy it
+copying /Users/ak/workspace/github.com/kadlex-web/static-site-generator/static/images/tolkien.png to /Users/ak/workspace/github.com/kadlex-web/static-site-generator/public/images/tolkien.png
+done!
+index.css
+/Users/ak/workspace/github.com/kadlex-web/static-site-generator/static/index.css is a file and I need to copy it
+copying /Users/ak/workspace/github.com/kadlex-web/static-site-generator/static/index.css to /Users/ak/workspace/github.com/kadlex-web/static-site-generator/public/index.css
+done!
