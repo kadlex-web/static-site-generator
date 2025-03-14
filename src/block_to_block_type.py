@@ -23,7 +23,7 @@ def block_to_block_type(markdown):
     if markdown.strip().startswith("```") and markdown.strip().endswith("```"):
         return "code"
     # Checks to see if the block begins with a > character and executes a helper function if it does
-    elif markdown.startswith("> "):
+    elif markdown.startswith(">"):
         return quote_block_type(markdown)
     # Checks to see if the block begins with a * or - block character and executes a helper function if it does
     elif markdown.startswith("* ") or markdown.startswith("- "):
@@ -38,7 +38,7 @@ def block_to_block_type(markdown):
 def quote_block_type(markdown):
     markdown_list = markdown.split("\n")
     for block_line in markdown_list:
-        if block_line.startswith("> ") == False:
+        if block_line.startswith(">") == False:
             return "paragraph"
     return "quote"
     
