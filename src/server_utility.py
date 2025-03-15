@@ -14,7 +14,7 @@ def extract_title(markdown):
         return title_text
 
 # Generates an index page at the provided dest_path (in .html) from a from_path(markdown) and a template(.html)
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     # Opens the source markdown file and reads the contents into a variable
     with open(from_path) as source_file:
@@ -32,6 +32,8 @@ def generate_page(from_path, template_path, dest_path):
     # Uses a regex pattern to replace the title field in the now modified template with the extracted title
     new_file = re.sub("{{ Title }}", title_text, new_file)
     # creates file
+    new_file = re.sub('href="/', f'href="{basepath}', new_file)
+    new_file = re.sub('src="/', f'src="{basepath}', new_file)
     file_name = os.path.join(dest_path, "index.html")
     # Opens the new file, writes the HTML, and closes the file
     dest_file = open(file_name, "w")
@@ -39,20 +41,20 @@ def generate_page(from_path, template_path, dest_path):
     dest_file.close()
 
 # Crawls a given directory, finds markdown files, converts to html and writes them to public
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     directories = os.listdir(dir_path_content)
     for file in directories:
         # Uses path to make it easier (and safer) to get the suffix
         file_name = Path(file)
         if file_name.suffix == '.md':
             source_content = os.path.join(dir_path_content, file_name)
-            generate_page(source_content, template_path, dest_dir_path)
+            generate_page(source_content, template_path, dest_dir_path, basepath)
         elif file_name.suffix == '':
             new_dir_path_content = os.path.join(dir_path_content, file)
             new_dest_dir_path = os.path.join(dest_dir_path, file)
             if os.path.exists(new_dest_dir_path) != True:
                 os.mkdir(new_dest_dir_path)
             print(f"moving source to {new_dir_path_content} and dest to {new_dest_dir_path}")
-            generate_pages_recursive(new_dir_path_content, template_path, new_dest_dir_path)
+            generate_pages_recursive(new_dir_path_content, template_path, new_dest_dir_path, basepath)
         else:
             pass
